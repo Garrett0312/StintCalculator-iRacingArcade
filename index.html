@@ -24,7 +24,7 @@
   }
 
   html, body {
-    width: 320px;
+    width: 250px;
     min-height: 0;
     background: transparent;
     font-family: var(--font-ui);
@@ -187,9 +187,9 @@
     display: grid;
     /*grid-template-columns: 52px 1fr 50px 50px 50px;*/
     /*grid-template-columns: 20px 1fr 50px 50px 50px;*/
-    grid-template-columns: 52px 1fr 45px 45px 35px 22px;
+    grid-template-columns: 25px 40px 45px 35px 35px 22px;
     gap: 2px;
-    padding: 3px 4px;
+    padding:1px 4px;
     font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
     color: var(--muted); font-weight: 700;
     border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -205,9 +205,9 @@
   .stint-row {
     display: grid;
     /*grid-template-columns: 52px 1fr 50px 50px 50px;*/
-    grid-template-columns: 52px 1fr 45px 45px 35px 22px;
+    grid-template-columns: 20px 45px 45px 35px 35px 22px;
     gap: 2px;
-    padding: 3px 4px;
+    padding: 2px 4px;
     border-radius: 3px;
     align-items: center;
     transition: background .15s;
@@ -223,19 +223,25 @@
     border: none;
     color: var(--text);
     font-family: var(--font-ui);
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 8px;
+    font-weight: 800;
     cursor: pointer;
     outline: none;
-    width: 100%;
-    padding: 0;
+    width: 110%;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 8 8'%3E%3Cpath d='M0 2l4 4 4-4' fill='none' stroke='%237a8a9a' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 4px center;
+    padding-left: 2px;
   }
   .stint-type-sel option { background: #111; }
 
   .sc {
     text-align: center;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 18px;
+    font-weight: 600;
   }
   .sc.finish { color: var(--green); font-size: 9px; letter-spacing: .5px; }
   .sc.warn   { color: var(--yellow); }
@@ -482,32 +488,6 @@
   const $ = id => document.getElementById(id);
   const sv = (id, v) => $(id).textContent = v;
 
-  /*
-  function buildStrategy(lapsNeeded, maxLaps, availableSlots) {
-    for (let stintCount = 1; stintCount <= availableSlots; stintCount++) {
-      if (stintCount * maxLaps < lapsNeeded) continue;
-
-      // All Extra Long to start
-      const attempt = new Array(stintCount).fill('Extra Long');
-
-      // Shorten from last stint backwards
-      for (let i = stintCount - 1; i >= 0; i--) {
-        for (const t of Object.keys(OFFSETS)) { // Extra Short → Extra Long
-          const testAttempt = [...attempt];
-          testAttempt[i] = t;
-          const total = testAttempt.reduce((s, x) => s + maxLaps + OFFSETS[x], 0);
-          if (total >= lapsNeeded) {
-            attempt[i] = t;
-            break;
-          }
-        }
-      }
-
-      const total = attempt.reduce((s, t) => s + maxLaps + OFFSETS[t], 0);
-      if (total >= lapsNeeded) return attempt;
-    }
-    return null;
-  }*/
  function buildStrategy(lapsNeeded, maxLaps, availableSlots) {
     for (let stintCount = 1; stintCount <= availableSlots; stintCount++) {
       if (stintCount * maxLaps < lapsNeeded) continue;
@@ -700,7 +680,7 @@
       
       
       row.innerHTML = `
-        <span class="stint-num">STINT ${i + 1}</span>
+        <span class="stint-num" style="font-size: 20px">${i + 1}</span>
         <select class="stint-type-sel" data-index="${i}" ${isLocked ? 'disabled' : ''}>
           ${Object.keys(OFFSETS).map(t =>
             `<option value="${t}" ${t === typeName ? 'selected' : ''}>${t}</option>`
@@ -794,8 +774,9 @@
           });
         }, 0);
       } else {
-        warn.textContent = `✓  Pit strategy covers full race distance`;
-        warn.className = 'ok';
+        warn.textContent = ''; //warn.textContent = `✓  Pit strategy covers full race distance`;
+        warn.className = '';
+        warn.style.display = 'none';
       }
     } else {
       warn.textContent = `⚠  Pit strategy does not reach the finish`;
