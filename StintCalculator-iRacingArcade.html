@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stint Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: rgba(8, 12, 18, 1);
+    --border: rgba(255, 165, 0, 0.35);
+    --accent: #ff9d00;
+    --accent2: #00d4ff;
+    --green: #39ff6e;
+    --red: #ff4444;
+    --yellow: #ffd700;
+    --text: #e8e8e8;
+    --muted: #7a8a9a;
+    --input-bg: rgba(255,255,255,0.06);
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-ui: 'Rajdhani', sans-serif;
+  }
+
+  html, body {
+    width: 320px;
+    min-height: 0;
+    background: transparent;
+    font-family: var(--font-ui);
+    color: var(--text);
+    user-select: none;
+    font-size: 13px;
+  }
+
+  #app {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  /* HEADER */
+  #header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    height: 32px;
+    background: rgba(255,157,0,0.12);
+    border-bottom: 1px solid var(--border);
+    cursor: move;
+  }
+  #header-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .hbtn {
+    width: 18px; height: 18px; border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: var(--muted); font-size: 11px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .hbtn:hover { background: rgba(255,255,255,0.14); color: var(--text); }
+
+  /* BODY */
+  #body { padding: 8px 10px 10px; }
+
+  /* INPUTS */
+  .inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 8px;
+    margin-bottom: 8px;
+  }
+  .input-group { display: flex; flex-direction: column; gap: 2px; }
+  .input-group label {
+    font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+  }
+  .input-group input {
+    background: var(--input-bg);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 3px 6px;
+    width: 100%;
+    outline: none;
+    transition: border-color .2s;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .input-group input::-webkit-inner-spin-button,
+  .input-group input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+  }
+  .input-group input:focus { border-color: var(--accent); }
+
+  /* STEPPER */
+  .input-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--input-bg);
+    transition: border-color .2s;
+  }
+  .input-wrap:focus-within { border-color: var(--accent); }
+  .input-wrap input {
+    border: none !important;
+    border-radius: 0 !important;
+    flex: 1;
+    min-width: 0;
+    background: transparent !important;
+  }
+  .steppers {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.08);
+  }
+  .step-btn {
+    flex: 1;
+    width: 16px;
+    padding: 0;
+    background: rgba(255,255,255,0.04);
+    border: none;
+    color: var(--muted);
+    font-size: 7px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .1s, color .1s;
+    user-select: none;
+  }
+  .step-btn:hover { background: rgba(255,157,0,0.18); color: var(--accent); }
+  .step-btn:active { background: rgba(255,157,0,0.32); }
+  .step-btn + .step-btn { border-top: 1px solid rgba(255,255,255,0.06); }
+
+  /* Fine-step for decimal input */
+  .steppers-fine .step-btn { font-size: 6px; }
+
+  /* DERIVED STATS */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+    padding: 6px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .stat { text-align: center; }
+  .stat-val {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.1;
+  }
+  .stat-lbl {
+    font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted); margin-top: 1px;
+  }
+  .col-orange { color: var(--accent); }
+  .col-blue   { color: var(--accent2); }
+  .col-green  { color: var(--green); }
+  .col-red    { color: var(--red); }
+  .col-yellow { color: var(--yellow); }
+
+  /* STINTS TABLE */
+  .stints-header {
+    display: grid;
+    /*grid-template-columns: 52px 1fr 50px 50px 50px;*/
+    /*grid-template-columns: 20px 1fr 50px 50px 50px;*/
+    grid-template-columns: 52px 1fr 45px 45px 35px 22px;
+    gap: 2px;
+    padding: 3px 4px;
+    font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 2px;
+  }
+  .stints-header span:not(:first-child) {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stint-row {
+    display: grid;
+    /*grid-template-columns: 52px 1fr 50px 50px 50px;*/
+    grid-template-columns: 52px 1fr 45px 45px 35px 22px;
+    gap: 2px;
+    padding: 3px 4px;
+    border-radius: 3px;
+    align-items: center;
+    transition: background .15s;
+  }
+  .stint-row:hover { background: rgba(255,255,255,0.04); }
+  .stint-row.done-row { opacity: 0.38; }
+
+  .stint-num {
+    font-size: 9.5px; color: var(--muted); font-weight: 700; letter-spacing: .5px;
+  }
+  .stint-type-sel {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    width: 100%;
+    padding: 0;
+  }
+  .stint-type-sel option { background: #111; }
+
+  .sc {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .sc.finish { color: var(--green); font-size: 9px; letter-spacing: .5px; }
+  .sc.warn   { color: var(--yellow); }
+  .sc.bad    { color: var(--red); }
+
+  /* TOTALS */
+  .totals-row {
+    display: grid;
+    /*grid-template-columns: 52px 1fr 50px 50px 50px;*/
+    grid-template-columns: 52px 1fr 45px 45px 35px 22px;
+    gap: 2px;
+    padding: 5px 4px 2px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 3px;
+  }
+  .totals-row .tl {
+    font-size: 9px; text-transform: uppercase; letter-spacing: .5px;
+    color: var(--muted); font-family: var(--font-ui); font-weight: 700;
+    grid-column: 1 / 3;
+  }
+  .totals-row .tv {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent2);
+  }
+
+  /* FUEL WARNING */
+  #fuel-warn {
+    margin-top: 6px; padding: 4px 7px;
+    border-radius: 3px; font-size: 10px; font-weight: 700;
+    text-align: center; letter-spacing: .5px; display: none;
+  }
+  #fuel-warn.bad { background: rgba(255,68,68,.18); border: 1px solid var(--red); color: var(--red); display:block; }
+  #fuel-warn.ok  { background: rgba(57,255,110,.1);  border: 1px solid var(--green); color: var(--green); display:block; }
+
+  #app {
+    transform-origin: top left;
+  }
+
+  #scale-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  #scale-bar label {
+    font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; white-space: nowrap;
+  }
+  #scale-slider {
+    flex: 1;
+    appearance: none;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  #scale-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+  #scale-val {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    width: 28px;
+    text-align: right;
+  }
+  #inputs-toggle-row {
+    display: flex;
+    justify-content: flex-end;
+    margin: -4px -2px 2px 0;
+  }
+  #inputs-btn {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+  .lock-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 2px;
+    color: var(--muted);
+    font-size: 8px;
+    cursor: pointer;
+    padding: 3px 0px;
+    line-height: 1;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .lock-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lock-btn.locked { border-color: var(--red); color: var(--red); }
+
+  .pit-input {
+    background: rgba(255,68,68,0.12);
+    border: 1px solid var(--red);
+    border-radius: 3px;
+    color: var(--red);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    width: 100%;
+    text-align: center;
+    outline: none;
+    padding: 1px 2px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .pit-input::-webkit-inner-spin-button,
+  .pit-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+  #body.collapsed { display: none; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <span id="header-title">⬡ STINT CALC</span>
+    <button class="hbtn" id="collapse-btn" title="Collapse/Expand">▾</button>
+  </div>
+
+  <div id="body">
+    <div id="inputs-section">
+      <div id="inputs-toggle-row">
+        <button class="hbtn" id="inputs-btn" title="Toggle Inputs">▾</button>
+      </div>
+      <!-- INPUTS -->
+      <div id="inputs-grid-wrap">
+        <div class="inputs-grid">
+          <div class="input-group">
+            <label>Total Race Laps</label>
+            <div class="input-wrap">
+              <input type="number" id="inp-laps" min="1" max="99" style="font-size: 20px;">
+              <div class="steppers">
+                <button class="step-btn" tabindex="-1" data-target="inp-laps" data-dir="1">▲</button>
+                <button class="step-btn" tabindex="-1" data-target="inp-laps" data-dir="-1">▼</button>
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Current Lap</label>
+            <div class="input-wrap">
+              <input type="number" id="inp-cur" min="1" max="99" style="font-size: 20px;">
+              <div class="steppers">
+                <button class="step-btn" tabindex="-1" data-target="inp-cur" data-dir="1">▲</button>
+                <button class="step-btn" tabindex="-1" data-target="inp-cur" data-dir="-1">▼</button>
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Fuel Remaining</label>
+            <div class="input-wrap">
+              <input type="number" id="inp-fuel" min="0" max="100" step="1" style="font-size: 20px;">
+              <div class="steppers">
+                <button class="step-btn" tabindex="-1" data-target="inp-fuel" data-dir="1">▲</button>
+                <button class="step-btn" tabindex="-1" data-target="inp-fuel" data-dir="-1">▼</button>
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Est. Laps in Tank</label>
+            <div class="input-wrap">
+              <input type="number" id="inp-estlaps" min="0.1" max="999" step="0.1" style="font-size: 20px;">
+              <div class="steppers steppers-fine">
+                <button class="step-btn" tabindex="-1" data-target="inp-estlaps" data-dir="0.1">▲</button>
+                <button class="step-btn" tabindex="-1" data-target="inp-estlaps" data-dir="-0.1">▼</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DERIVED STATS -->
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-val col-orange" id="s-fpl">—</div>
+        <div class="stat-lbl">Fuel / Lap</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val col-blue" id="s-maxlaps">—</div>
+        <div class="stat-lbl">Max Laps/Tank</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val col-green" id="s-lapsrem">—</div>
+        <div class="stat-lbl">Laps Left</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val col-yellow" id="s-fuelneeded">—</div>
+        <div class="stat-lbl">Fuel to Finish</div>
+      </div>
+    </div>
+
+    <!-- STINTS TABLE -->
+    <div class="stints-header">
+      <span>Stint</span><span>Type</span>
+      <span>Fuel</span><span>Pit Lap</span><span>Laps</span><span style="margin-top: -2px; margin-left: 3px;">OVR✎</span>
+    </div>
+    <div id="stints-body"></div>
+
+    <div class="totals-row">
+      <span class="tl">Totals</span>
+      <span class="tv" id="t-fuel">—</span>
+      <span class="tv" id="t-left" style="text-align:left; white-space:nowrap;">—</span>
+    </div>
+
+    <div id="fuel-warn"></div>
+  </div>
+  <div id="scale-bar">
+    <label>Scale</label>
+    <input type="range" id="scale-slider" min="50" max="200" value="100" step="5">
+    <span id="scale-val">1×</span>
+  </div>
+</div>
+
+<script>
+  const TANK = 100;
+  const OFFSETS = {
+    'Extra Short': -4,
+    'Short':       -3,
+    'Normal':      -2,
+    'Long':        -1,
+    'Extra Long':   0,
+  };
+  //const MAX_STINTS = Math.ceil(raceRem / (maxLaps - 2));;
+  let MAX_STINTS = 5;
+  let MAX_STINTS_LIMIT = 10;
+
+  const state = {
+    totalLaps: null,
+    curLap:    null,
+    fuelLeft:  null,
+    estLaps:   null,
+    stintTypes:    ['Normal', 'Normal', 'Normal', 'Normal', 'Normal', 'Normal', 'Normal', 'Normal', 'Normal', 'Normal'],
+    lockedPitLaps: [null, null, null, null, null, null, null, null, null, null],  // actual pit lap if locked
+  };
+
+  const $ = id => document.getElementById(id);
+  const sv = (id, v) => $(id).textContent = v;
+
+  /*
+  function buildStrategy(lapsNeeded, maxLaps, availableSlots) {
+    for (let stintCount = 1; stintCount <= availableSlots; stintCount++) {
+      if (stintCount * maxLaps < lapsNeeded) continue;
+
+      // All Extra Long to start
+      const attempt = new Array(stintCount).fill('Extra Long');
+
+      // Shorten from last stint backwards
+      for (let i = stintCount - 1; i >= 0; i--) {
+        for (const t of Object.keys(OFFSETS)) { // Extra Short → Extra Long
+          const testAttempt = [...attempt];
+          testAttempt[i] = t;
+          const total = testAttempt.reduce((s, x) => s + maxLaps + OFFSETS[x], 0);
+          if (total >= lapsNeeded) {
+            attempt[i] = t;
+            break;
+          }
+        }
+      }
+
+      const total = attempt.reduce((s, t) => s + maxLaps + OFFSETS[t], 0);
+      if (total >= lapsNeeded) return attempt;
+    }
+    return null;
+  }*/
+ function buildStrategy(lapsNeeded, maxLaps, availableSlots) {
+    for (let stintCount = 1; stintCount <= availableSlots; stintCount++) {
+      if (stintCount * maxLaps < lapsNeeded) continue;
+
+      const attempt = new Array(stintCount).fill('Extra Long');
+
+      for (let i = stintCount - 1; i >= 0; i--) {
+        for (const t of Object.keys(OFFSETS)) {
+          const testAttempt = [...attempt];
+          testAttempt[i] = t;
+          const total = testAttempt.reduce((s, x) => s + maxLaps + OFFSETS[x], 0);
+          if (total >= lapsNeeded) {
+            attempt[i] = t;
+            break;
+          }
+        }
+      }
+
+      const total = attempt.reduce((s, t) => s + maxLaps + OFFSETS[t], 0);
+      if (total >= lapsNeeded) return attempt;
+    }
+    return null;
+  }
+
+  function getLockedState() {
+    let lockedLaps = 0;
+    let firstUnlocked = 0;
+    for (let i = 0; i < MAX_STINTS_LIMIT; i++) {
+      if (state.lockedPitLaps[i] !== null) {
+        lockedLaps = state.lockedPitLaps[i];
+        firstUnlocked = i + 1;
+      }
+    }
+    const { totalLaps } = state;
+    const lapsNeeded = firstUnlocked > 0 ? totalLaps - lockedLaps : totalLaps;
+    const availableSlots = MAX_STINTS_LIMIT - firstUnlocked;
+    return { lockedLaps, firstUnlocked, lapsNeeded, availableSlots };
+  }
+
+  function autoStrategy() {
+    const { totalLaps, curLap, fuelLeft, estLaps } = state;
+    if (!totalLaps || !curLap || !fuelLeft || !estLaps) return;
+
+    const fuelPerLap = fuelLeft / estLaps;
+    const maxLaps    = Math.max(1, Math.floor(TANK / fuelPerLap));
+    const { firstUnlocked, lapsNeeded, availableSlots } = getLockedState();
+
+    const attempt = buildStrategy(lapsNeeded, maxLaps, availableSlots)
+                    || new Array(availableSlots).fill('Extra Long');
+
+    const result = new Array(firstUnlocked).fill(null);
+    attempt.forEach(t => result.push(t));
+    while (result.length < MAX_STINTS_LIMIT) result.push('Normal');
+
+    result.forEach((t, i) => { if (t !== null) state.stintTypes[i] = t; });
+    calc();
+  }
+
+  function findFewerStopsStrategy() {
+    const { totalLaps, curLap, fuelLeft, estLaps } = state;
+    if (!totalLaps || !curLap || !fuelLeft || !estLaps) return null;
+
+    const fuelPerLap = fuelLeft / estLaps;
+    const maxLaps    = Math.max(1, Math.floor(TANK / fuelPerLap));
+    const { firstUnlocked, lapsNeeded } = getLockedState();
+
+    let currentCount = 0;
+    let lapsAcc = 0;
+    for (let i = firstUnlocked; i < MAX_STINTS_LIMIT; i++) {
+      lapsAcc += maxLaps + OFFSETS[state.stintTypes[i]];
+      currentCount++;
+      if (lapsAcc >= lapsNeeded) break;
+    }
+
+    if (currentCount <= 1) return null;
+    const attempt = buildStrategy(lapsNeeded, maxLaps, currentCount - 1);
+    return attempt && attempt.reduce((s, t) => s + maxLaps + OFFSETS[t], 0) >= lapsNeeded
+      ? attempt : null;
+  }
+
+  function findShorterStrategy() {
+    const { totalLaps, curLap, fuelLeft, estLaps } = state;
+    if (!totalLaps || !curLap || !fuelLeft || !estLaps) return null;
+
+    const fuelPerLap = fuelLeft / estLaps;
+    const maxLaps    = Math.max(1, Math.floor(TANK / fuelPerLap));
+    const { firstUnlocked, lapsNeeded } = getLockedState();
+
+    let activeCount = 0;
+    let lapsAcc = 0;
+    for (let i = firstUnlocked; i < MAX_STINTS_LIMIT; i++) {
+      lapsAcc += maxLaps + OFFSETS[state.stintTypes[i]];
+      activeCount++;
+      if (lapsAcc >= lapsNeeded) break;
+    }
+
+    const current = state.stintTypes.slice(firstUnlocked, firstUnlocked + activeCount);
+    const typeNames = Object.keys(OFFSETS);
+
+    for (let i = activeCount - 1; i >= 0; i--) {
+      for (const t of typeNames) {
+        if (t === current[i]) break;
+        const test = [...current];
+        test[i] = t;
+        const total = test.reduce((s, x) => s + maxLaps + OFFSETS[x], 0);
+        if (total >= lapsNeeded) return test;
+      }
+    }
+    return null;
+  }
+    
+  function calc() {
+    const { totalLaps, curLap, fuelLeft, estLaps, stintTypes } = state;
+    if (!totalLaps || !curLap || !fuelLeft || !estLaps) return;
+
+    // Core derived values
+    const fuelPerLap   = fuelLeft / estLaps;
+    const maxLaps      = Math.max(1, Math.floor(TANK / fuelPerLap));
+    const raceRem      = totalLaps - (curLap - 1);
+    const fuelToFinish = fuelPerLap * raceRem;      // Total fuel still needed
+    MAX_STINTS_LIMIT   = Math.ceil(raceRem / Math.max(1, maxLaps + OFFSETS['Extra Short'])) + 1;                        
+    // Show enough rows to cover the race, minimum what's needed at Extra Long pace
+    const minRowsNeeded = Math.min(MAX_STINTS_LIMIT, Math.ceil(raceRem / maxLaps));
+    let dynamicCount = 0;
+    let dynamicLaps = 0;
+    for (let i = 0; i < MAX_STINTS_LIMIT; i++) {
+      const isLocked = state.lockedPitLaps[i] !== null;
+      const prevLocked = i === 0 ? 0 : (state.lockedPitLaps[i-1] ?? dynamicLaps);
+      const stintLaps = isLocked
+        ? state.lockedPitLaps[i] - prevLocked
+        : maxLaps + (OFFSETS[state.stintTypes[i]] ?? -2);
+      dynamicLaps += stintLaps;
+      dynamicCount++;
+      if (dynamicLaps >= totalLaps) break;
+    }
+    MAX_STINTS = Math.min(MAX_STINTS_LIMIT, Math.max(minRowsNeeded, dynamicCount));
+
+    // Update stat bar
+    sv('s-fpl',     fuelPerLap.toFixed(2));
+    sv('s-maxlaps', maxLaps + ' laps');
+    sv('s-lapsrem', raceRem + ' laps');
+    sv('s-fuelneeded', Math.round(fuelPerLap * raceRem));
+
+    // Build stints
+    const container = $('stints-body');
+    container.innerHTML = '';
+
+    let cumulativeLap  = 0;
+    let totalFuelUsed  = 0;
+    let raceComplete   = false;
+
+    for (let i = 0; i < MAX_STINTS; i++) {
+      const lapsBefore = cumulativeLap; // snapshot before this stint increments it
+      const typeName  = stintTypes[i];
+      const offset    = OFFSETS[typeName] ?? -2;
+      const isLocked  = state.lockedPitLaps[i] !== null;
+      const stintLaps = isLocked
+        ? state.lockedPitLaps[i] - cumulativeLap
+        : maxLaps + offset;
+      //const stintFuel = Math.round(fuelPerLap * stintLaps);
+      const stintFuel = fuelPerLap * stintLaps;
+      const pitLap    = cumulativeLap + stintLaps;
+      const leftover  = TANK - stintFuel;
+      const finishes  = pitLap >= totalLaps;
+
+      totalFuelUsed += stintFuel;
+      cumulativeLap  = Math.min(pitLap, totalLaps);
+
+      const row = document.createElement('div');
+      row.className = 'stint-row' + (raceComplete ? ' done-row' : '');
+
+      // Pit lap cell — editable input if locked, number if not
+      let pitCell;
+      let lapsCell;
+      if (isLocked) {
+        pitCell = `<input class="pit-input" type="number" data-stint="${i}" data-type="pitlap" value="${state.lockedPitLaps[i]}" min="1" max="${totalLaps}">`;
+        lapsCell = `<input class="pit-input" type="number" data-stint="${i}" data-type="laps" value="${stintLaps}" min="1" max="${maxLaps}">`;
+      } else if (finishes) {
+        pitCell  = `<span class="sc finish">FINISH</span>`;
+        lapsCell = `<span class="sc">${stintLaps}</span>`;
+      } else {
+        const cls = stintFuel > TANK ? 'bad' : stintFuel > TANK * 0.92 ? 'warn' : '';
+        pitCell  = `<span class="sc ${cls}">${pitLap}</span>`;
+        lapsCell = `<span class="sc">${stintLaps}</span>`;
+      }
+
+      const fuelCls = stintFuel > TANK ? 'bad' : stintFuel > TANK * 0.92 ? 'warn' : '';
+      const lockLabel = isLocked ? '🛑' : '✎'; //🛠️
+      const lockCls   = isLocked ? 'locked' : '';
+      
+      
+      row.innerHTML = `
+        <span class="stint-num">STINT ${i + 1}</span>
+        <select class="stint-type-sel" data-index="${i}" ${isLocked ? 'disabled' : ''}>
+          ${Object.keys(OFFSETS).map(t =>
+            `<option value="${t}" ${t === typeName ? 'selected' : ''}>${t}</option>`
+          ).join('')}
+        </select>
+        <span class="sc ${fuelCls}">${Math.round(stintFuel)}</span>
+        ${pitCell}
+        ${lapsCell}
+        <button class="lock-btn ${lockCls}" data-stint="${i}">${lockLabel}</button>
+      `;
+      container.appendChild(row);
+
+      // Type select change
+      row.querySelector('.stint-type-sel').addEventListener('change', e => {
+        state.stintTypes[+e.target.dataset.index] = e.target.value;
+        calc();
+      });
+
+      // Lock/unlock button
+      row.querySelector('.lock-btn').addEventListener('click', e => {
+        const idx = +e.target.dataset.stint;
+        if (state.lockedPitLaps[idx] !== null) {
+          // Unlock
+          state.lockedPitLaps[idx] = null;
+        } else {
+          // Lock to current calculated pit lap
+          state.lockedPitLaps[idx] = pitLap;
+        }
+        autoStrategy();
+      });
+
+      // Pit lap input change when locked
+      const pitInputEl = row.querySelector('.pit-input[data-type="pitlap"]');
+      if (pitInputEl) {
+        pitInputEl.addEventListener('change', e => {
+          const v = parseInt(e.target.value);
+          if (!isNaN(v) && v > 0 && v <= totalLaps) {
+            state.lockedPitLaps[+e.target.dataset.stint] = v;
+            autoStrategy();
+          }
+        });
+      }
+
+      const lapsInputEl = row.querySelector('.pit-input[data-type="laps"]');
+      if (lapsInputEl) {
+        lapsInputEl.addEventListener('change', e => {
+          const v = parseInt(e.target.value);
+          if (!isNaN(v) && v > 0) {
+            // Convert laps to pit lap and store
+            state.lockedPitLaps[+e.target.dataset.stint] = lapsBefore + v;
+            autoStrategy();
+          }
+        });
+      }
+
+      if (finishes && !raceComplete) raceComplete = true;
+    }
+
+    // Totals
+    sv('t-fuel',   Math.round(totalFuelUsed));
+    //sv('t-pitlap', Math.min(cumulativeLap, totalLaps));
+    const totalFuelNeeded = fuelPerLap * totalLaps;
+    const finalLeftover = Math.round(totalFuelUsed - totalFuelNeeded);
+    if (finalLeftover>0) {
+      sv('t-left', `Leftover Fuel:+${finalLeftover}`);
+    } else {
+      sv('t-left', `Leftover Fuel:${finalLeftover}`);
+    }
+    
+
+    // Warning banner
+    const warn = $('fuel-warn');
+    if (raceComplete) {
+      const fewer  = findFewerStopsStrategy();
+      const shorter = !fewer ? findShorterStrategy() : null;
+      if (fewer || shorter) {
+        const suggestion = fewer || shorter;
+        const label = fewer ? 'FEWER STOPS ▶' : 'SHORTER STINTS ▶';
+        warn.innerHTML = `✓ Pit strategy covers full race distance &nbsp;<button id="fewer-btn" style="background:rgba(255,157,0,0.15);border:1px solid var(--accent);border-radius:3px;color:var(--accent);font-size:9px;font-family:var(--font-ui);font-weight:700;letter-spacing:.5px;cursor:pointer;padding:2px 5px;">${label}</button>`;
+        warn.className = 'ok';
+        setTimeout(() => {
+          const btn = document.getElementById('fewer-btn');
+          if (btn) btn.addEventListener('click', () => {
+            let firstUnlocked = 0;
+            for (let i = 0; i < 5; i++) {
+              if (state.lockedPitLaps[i] !== null) firstUnlocked = i + 1;
+            }
+            suggestion.forEach((t, i) => { state.stintTypes[firstUnlocked + i] = t; });
+            for (let i = firstUnlocked + suggestion.length; i < 5; i++) state.stintTypes[i] = 'Normal';
+            calc();
+          });
+        }, 0);
+      } else {
+        warn.textContent = `✓  Pit strategy covers full race distance`;
+        warn.className = 'ok';
+      }
+    } else {
+      warn.textContent = `⚠  Pit strategy does not reach the finish`;
+      warn.className = 'bad';
+    }
+  }
+
+  // Stepper buttons
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    btn.addEventListener('mousedown', e => e.preventDefault()); // prevent focus steal
+    btn.addEventListener('click', () => {
+      const input = $(btn.dataset.target);
+      const dir   = parseFloat(btn.dataset.dir);
+      const step  = Math.abs(dir);
+      const min   = parseFloat(input.min) || 0;
+      const max   = parseFloat(input.max) || Infinity;
+      let val = parseFloat(input.value) || 0;
+      val = Math.round((val + dir) / step) * step; // snap to step grid
+      val = Math.min(max, Math.max(min, val));
+      input.value = parseFloat(val.toFixed(3));
+      input.dispatchEvent(new Event('input'));
+    });
+  });
+
+  // Tab from input focuses its up stepper
+  document.querySelectorAll('.input-wrap input').forEach((input, idx, all) => {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault();
+        const next = all[idx + 1];
+        if (next) next.focus();
+      }
+    });
+  });
+
+  // Tab from a stepper moves to the next input
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault();
+        const allInputs = [...document.querySelectorAll('.input-wrap input')];
+        const currentWrap = btn.closest('.input-wrap');
+        const currentInput = currentWrap.querySelector('input');
+        const idx = allInputs.indexOf(currentInput);
+        const next = allInputs[idx + 1];
+        if (next) next.focus();
+      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  });
+
+  // Dynamically cap Current Lap max to Total Race Laps
+  function updateCurLapMax() {
+    const curInput = $('inp-cur');
+    curInput.max = state.totalLaps;
+    if (state.curLap > state.totalLaps) {
+      state.curLap = state.totalLaps;
+      curInput.value = state.totalLaps;
+    }
+  }
+
+  // Input bindings
+  [
+    ['inp-laps',    'totalLaps', true],
+    ['inp-cur',     'curLap',    true],
+    ['inp-fuel',    'fuelLeft',  false],
+    ['inp-estlaps', 'estLaps',   false],
+  ].forEach(([id, key, isInt]) => {
+    $(id).addEventListener('input', e => {
+      const v = isInt ? parseInt(e.target.value) : parseFloat(e.target.value);
+      if (!isNaN(v) && v > 0) {
+        state[key] = v;
+        if (key === 'totalLaps') updateCurLapMax();
+        calc();
+        const { totalLaps, curLap, fuelLeft, estLaps } = state;
+        if (totalLaps && curLap && fuelLeft && estLaps) autoStrategy();
+      }
+    });
+  });
+
+  // Collapse
+  let collapsed = false;
+  $('collapse-btn').addEventListener('click', () => {
+    collapsed = !collapsed;
+    $('body').classList.toggle('collapsed', collapsed);
+    $('collapse-btn').textContent = collapsed ? '▸' : '▾';
+  });
+
+  // Drag
+  (function() {
+    let dragging = false, ox = 0, oy = 0;
+    $('header').addEventListener('mousedown', e => {
+      if (e.target.closest('.hbtn')) return;
+      dragging = true;
+      ox = e.clientX - (parseInt(document.body.style.left) || 0);
+      oy = e.clientY - (parseInt(document.body.style.top)  || 0);
+    });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      document.body.style.position = 'fixed';
+      document.body.style.left = (e.clientX - ox) + 'px';
+      document.body.style.top  = (e.clientY - oy) + 'px';
+    });
+    document.addEventListener('mouseup', () => { dragging = false; });
+  })();
+
+  // Scale
+  $('scale-slider').addEventListener('input', e => {
+    const s = e.target.value / 100;
+    $('app').style.transform = `scale(${s})`;
+    $('scale-val').textContent = s.toFixed(2).replace(/\.?0+$/, '') + '×';
+  });
+
+  // Toggle inputs section
+  let inputsCollapsed = false;
+  $('inputs-btn').addEventListener('click', () => {
+    inputsCollapsed = !inputsCollapsed;
+    $('inputs-grid-wrap').style.display = inputsCollapsed ? 'none' : '';
+    $('inputs-btn').textContent = inputsCollapsed ? '▸' : '▾';
+  });
+
+  calc();
+</script>
+</body>
+</html>
