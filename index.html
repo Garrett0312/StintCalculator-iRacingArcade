@@ -71,7 +71,10 @@
   .hbtn:hover { background: rgba(255,255,255,0.14); color: var(--text); }
 
   /* BODY */
-  #body { padding: 8px 10px 10px; }
+  #body { 
+    padding: 8px 10px 10px; 
+    transition: left 0.05s linear, top 0.05s linear;
+  }
 
   /* INPUTS */
   .inputs-grid {
@@ -353,6 +356,7 @@
 </style>
 </head>
 <body>
+
 <div id="app">
   <div id="header">
     <span id="header-title">⬡ STINT CALC</span>
@@ -886,25 +890,36 @@
   // Drag
   (function() {
     let dragging = false, ox = 0, oy = 0;
+    let posX = 0, posY = 0;
+
     $('header').addEventListener('mousedown', e => {
       if (e.target.closest('.hbtn')) return;
       dragging = true;
-      ox = e.clientX - (parseInt(document.body.style.left) || 0);
-      oy = e.clientY - (parseInt(document.body.style.top)  || 0);
+      ox = e.clientX - posX;
+      oy = e.clientY - posY;
+      e.preventDefault();
     });
+
     document.addEventListener('mousemove', e => {
       if (!dragging) return;
-      document.body.style.position = 'fixed';
-      document.body.style.left = (e.clientX - ox) + 'px';
-      document.body.style.top  = (e.clientY - oy) + 'px';
+      posX = e.clientX - ox;
+      posY = e.clientY - oy;
+      const scale = parseFloat($('app').dataset.scale || 1);
+      $('app').dataset.posX = posX;
+      $('app').dataset.posY = posY;
+      $('app').style.transform = `scale(${scale}) translate(${posX / scale}px, ${posY / scale}px)`;
     });
+
     document.addEventListener('mouseup', () => { dragging = false; });
   })();
 
   // Scale
   $('scale-slider').addEventListener('input', e => {
     const s = e.target.value / 100;
-    $('app').style.transform = `scale(${s})`;
+    $('app').dataset.scale = s;
+    const posX = parseFloat($('app').dataset.posX || 0);
+    const posY = parseFloat($('app').dataset.posY || 0);
+    $('app').style.transform = `scale(${s}) translate(${posX / s}px, ${posY / s}px)`;
     $('scale-val').textContent = s.toFixed(2).replace(/\.?0+$/, '') + '×';
   });
 
