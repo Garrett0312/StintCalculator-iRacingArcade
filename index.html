@@ -366,14 +366,11 @@
 <div id="app">
   <div id="header">
     <span id="header-title">⬡ STINT CALC</span>
-    <button class="hbtn" id="collapse-btn" title="Collapse/Expand">▾</button>
+    <button class="hbtn" id="inputs-btn" title="Toggle Inputs">▾</button>
   </div>
 
   <div id="body">
     <div id="inputs-section">
-      <div id="inputs-toggle-row">
-        <button class="hbtn" id="inputs-btn" title="Toggle Inputs">▾</button>
-      </div>
       <!-- INPUTS -->
       <div id="inputs-grid-wrap">
         <div class="inputs-grid">
@@ -860,14 +857,6 @@
     });
   });
 
-  // Collapse
-  let collapsed = false;
-  $('collapse-btn').addEventListener('click', () => {
-    collapsed = !collapsed;
-    $('body').classList.toggle('collapsed', collapsed);
-    $('collapse-btn').textContent = collapsed ? '▸' : '▾';
-  });
-
   // Drag
   (function() {
     let dragging = false, ox = 0, oy = 0;
@@ -904,6 +893,7 @@
     $('scale-val').textContent = s.toFixed(2).replace(/\.?0+$/, '') + '×';
   });
 
+  
   // Toggle inputs section
   let inputsCollapsed = false;
   $('inputs-btn').addEventListener('click', () => {
@@ -911,7 +901,14 @@
     $('inputs-grid-wrap').style.display = inputsCollapsed ? 'none' : '';
     $('inputs-btn').textContent = inputsCollapsed ? '▸' : '▾';
   });
-
+  /*
+  // Collapse
+  let collapsed = false;
+  $('collapse-btn').addEventListener('click', () => {
+    collapsed = !collapsed;
+    $('body').classList.toggle('collapsed', collapsed);
+    $('collapse-btn').textContent = collapsed ? '▸' : '▾';
+  });*/
   calc();
 </script>
 </body>
