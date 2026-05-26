@@ -173,7 +173,7 @@
     line-height: 1.1;
   }
   .stat-lbl {
-    font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 6px; letter-spacing: 1px; text-transform: uppercase;
     color: var(--muted); margin-top: 1px;
   }
   .col-orange { color: var(--accent); }
@@ -624,8 +624,10 @@
 
     // Update stat bar
     sv('s-fpl',     fuelPerLap.toFixed(2));
-    sv('s-maxlaps', maxLaps + ' laps');
-    sv('s-lapsrem', raceRem + ' laps');
+    //sv('s-maxlaps', maxLaps + ' laps');
+    //sv('s-lapsrem', raceRem + ' laps');
+    sv('s-maxlaps', maxLaps);
+    sv('s-lapsrem', raceRem);
     sv('s-fuelneeded', Math.round(fuelPerLap * raceRem));
 
     // Build stints
