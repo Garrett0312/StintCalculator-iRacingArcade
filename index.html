@@ -144,7 +144,7 @@
     flex: 1;
     width: 13px;
     padding: 0;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
     border: none;
     color: var(--muted);
     font-size: 7px;
@@ -194,52 +194,74 @@
 
   .stint-row {
     display: flex;
-    flex-direction: column;
-    padding: 3px 5px;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 5px 3px;
     border-radius: 3px;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     transition: background .15s;
-    gap: 1px;
+    gap: 3px;
+    position: relative;
   }
   .stint-row:hover { background: rgba(255,255,255,0.04); }
   .stint-row.done-row { opacity: 0.38; }
 
-  /* Top line: big numbers — Pit Lap and Laps dominant */
-  .stint-top {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 3px;
+  .stint-num {
+    position: absolute;
+    top: 1px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7px; color: var(--muted); font-weight: 700; letter-spacing: .5px;
+    white-space: nowrap;
   }
-  /* Bottom line: secondary info */
-  .stint-bot {
+
+  /* Left: pit lap + laps stacked */
+  .stint-left {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    flex: 1;
+  }
+
+  /* Center: type selector */
+  .stint-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
+  }
+
+  /* Right: fuel + lock */
+  .stint-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
     gap: 3px;
+    flex: 1;
   }
 
   .stint-num {
-    font-size: 8px; color: var(--muted); font-weight: 700; letter-spacing: .5px;
-    min-width: 10px;
+    font-size: 9px; color: var(--muted); font-weight: 700; letter-spacing: .5px;
+    text-align: center;
+    width: 100%;
   }
   .stint-type-sel {
     background: transparent;
     border: none;
     color: var(--muted);
     font-family: var(--font-ui);
-    font-size: 7px;
+    font-size: 10px;
     font-weight: 800;
     cursor: pointer;
     outline: none;
-    flex: 1;
     -webkit-appearance: none;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 8 8'%3E%3Cpath d='M0 2l4 4 4-4' fill='none' stroke='%237a8a9a' stroke-width='1.5'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1px center;
-    padding-right: 8px;
-    max-width: 60px;
+    text-align: center;
+    text-wrap: wrap;
+    width: 100%;
+    padding: 0;
   }
   .stint-type-sel option { background: #111; }
 
@@ -253,14 +275,25 @@
   .sc.pitlap-val {
     font-size: 20px;
     color: var(--red);
+    text-align: center;
   }
   .sc.laps-val {
     font-size: 20px;
     color: var(--accent2);
+    text-align: center;
   }
   .sc.finish { color: var(--green); font-size: 9px; letter-spacing: .5px; font-weight: 600; }
-  .sc.warn   { color: var(--yellow); }
-  .sc.bad    { color: var(--red); }
+
+  /*
+  .sc-fuel {
+    font-family: var(--font-mono);
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .sc-fuel.warn { color: var(--yellow); }
+  .sc-fuel.bad  { color: var(--red); }*/
 
   /* small fuel label */
   .fuel-lbl {
@@ -268,7 +301,7 @@
     line-height: 1;
   }
   .pit-lbl {
-    font-size: 6px; color: rgba(255,68,68,0.6); letter-spacing: .5px; text-transform: uppercase;
+    font-size: 6px; color: rgba(255,68,68,0.9); letter-spacing: .5px; text-transform: uppercase;
     line-height: 1;
   }
   .laps-lbl {
@@ -277,12 +310,17 @@
   }
   .sc-fuel {
     font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--accent);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(200,200,200,0.9);
   }
   .sc-fuel.warn { color: var(--yellow); }
   .sc-fuel.bad  { color: var(--red); }
+  .fuel-lbl {
+    font-size: 6px; color: rgba(255,255,255,0.6); letter-spacing: .5px; text-transform: uppercase;
+    line-height: 1;
+  }
 
   /* big number columns with labels */
   .val-block {
@@ -360,6 +398,7 @@
     font-size: 8px;
     cursor: pointer;
     padding: 3px 0px;
+    width: 80%;
     line-height: 1;
     transition: all .15s;
     white-space: nowrap;
@@ -373,9 +412,9 @@
     border-radius: 3px;
     color: var(--red);
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 15px;
     width: 100%;
-    text-align: center;
+    text-align: start;
     outline: none;
     padding: 1px 2px;
     -moz-appearance: textfield;
@@ -721,29 +760,34 @@
         pitDisplay  = `<span class="sc finish">FIN</span>`;
         lapsDisplay = `<span class="sc laps-val">${stintLaps}</span>`;
       } else {
-        pitDisplay  = `<span class="sc pitlap-val ${fuelCls}">${pitLap}</span>`;
+        pitDisplay  = `<span class="sc pitlap-val">${pitLap}</span>`;
         lapsDisplay = `<span class="sc laps-val">${stintLaps}</span>`;
       }
 
       row.innerHTML = `
-        <div class="stint-top">
-          <div class="val-block">
+        <span class="stint-num">Stint #${i + 1}</span>
+        <div class="stint-left">
+          <div class="val-block" style="align-items:flex-start">
             <div class="pit-lbl">PIT LAP</div>
             ${pitDisplay}
           </div>
-          <div class="val-block">
+          <div class="val-block" style="align-items:flex-start">
             <div class="laps-lbl">LAPS</div>
             ${lapsDisplay}
           </div>
         </div>
-        <div class="stint-bot">
-          <span class="stint-num">#${i + 1}</span>
+        <div class="stint-center">
           <select class="stint-type-sel" data-index="${i}" ${isLocked ? 'disabled' : ''}>
             ${Object.keys(OFFSETS).map(t =>
               `<option value="${t}" ${t === typeName ? 'selected' : ''}>${t}</option>`
             ).join('')}
           </select>
-          <span class="sc-fuel ${fuelCls}">${Math.round(stintFuel)}</span>
+        </div>
+        <div class="stint-right">
+          <div class="val-block" style="align-items:flex-end">
+            <div class="fuel-lbl">FUEL</div>
+            <span class="sc-fuel ${fuelCls}">${Math.round(stintFuel)}</span>
+          </div>
           <button class="lock-btn ${lockCls}" data-stint="${i}">${lockLabel}</button>
         </div>
       `;
@@ -849,7 +893,7 @@
       const min   = parseFloat(input.min) || 0;
       const max   = parseFloat(input.max) || Infinity;
       let val = parseFloat(input.value) || 0;
-      val = Math.round(val + dir);// / step) * step; // snap to step grid
+      val = Math.round((val + dir) * 1000) / 1000; // just add, keep float precision clean
       val = Math.min(max, Math.max(min, val));
       input.value = parseFloat(val.toFixed(3));
       input.dispatchEvent(new Event('input'));
