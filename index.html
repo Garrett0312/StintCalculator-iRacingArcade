@@ -24,13 +24,13 @@
   }
 
   html, body {
-    width: 250px;
+    width: 140px;
     min-height: 0;
     background: transparent;
     font-family: var(--font-ui);
     color: var(--text);
     user-select: none;
-    font-size: 13px;
+    font-size: 11px;
   }
 
   #app {
@@ -47,24 +47,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 10px;
-    height: 32px;
+    padding: 0 7px;
+    height: 22px;
     background: rgba(255,157,0,0.12);
     border-bottom: 1px solid var(--border);
     cursor: move;
   }
   #header-title {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--accent);
   }
   .hbtn {
-    width: 18px; height: 18px; border-radius: 3px;
+    width: 14px; height: 14px; border-radius: 3px;
     border: 1px solid rgba(255,255,255,0.15);
     background: rgba(255,255,255,0.06);
-    color: var(--muted); font-size: 11px;
+    color: var(--muted); font-size: 9px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: all .15s;
   }
@@ -72,7 +72,7 @@
 
   /* BODY */
   #body { 
-    padding: 8px 10px 10px; 
+    padding: 5px 7px 7px; 
     transition: left 0.05s linear, top 0.05s linear;
   }
 
@@ -80,13 +80,13 @@
   .inputs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 5px 8px;
-    margin-bottom: 8px;
+    gap: 3px 4px;
+    margin-bottom: 5px;
   }
-  .input-group { display: flex; flex-direction: column; gap: 2px; }
+  .input-group { display: flex; flex-direction: column; gap: 1px; }
   .input-group label {
-    font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase;
-    color: var(--muted); font-weight: 600;
+    font-size: 7px; letter-spacing: 0.8px; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; white-space: nowrap;
   }
   .input-group input {
     background: var(--input-bg);
@@ -94,8 +94,8 @@
     border-radius: 3px;
     color: var(--accent);
     font-family: var(--font-mono);
-    font-size: 13px;
-    padding: 3px 6px;
+    font-size: 12px;
+    padding: 1px 3px;
     width: 100%;
     outline: none;
     transition: border-color .2s;
@@ -130,14 +130,21 @@
   }
   .steppers {
     display: flex;
+    flex-direction: row;
+    border-left: 1px solid rgba(255,255,255,0.08);
+  }
+  .steppers-col {
+    display: flex;
     flex-direction: column;
+  }
+  .steppers-col + .steppers-col {
     border-left: 1px solid rgba(255,255,255,0.08);
   }
   .step-btn {
     flex: 1;
-    width: 16px;
+    width: 13px;
     padding: 0;
-    background: rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.08);
     border: none;
     color: var(--muted);
     font-size: 7px;
@@ -151,29 +158,29 @@
   }
   .step-btn:hover { background: rgba(255,157,0,0.18); color: var(--accent); }
   .step-btn:active { background: rgba(255,157,0,0.32); }
-  .step-btn + .step-btn { border-top: 1px solid rgba(255,255,255,0.06); }
-
-  /* Fine-step for decimal input */
-  .steppers-fine .step-btn { font-size: 6px; }
+  .steppers-col .step-btn + .step-btn { border-top: 1px solid rgba(255,255,255,0.08); }
+  /* dim the coarse column slightly to hint at hierarchy */
+  .steppers-col:first-child .step-btn { color: rgba(122,138,154,0.8); }
+  .steppers-col:first-child .step-btn:hover { color: var(--accent); }
 
   /* DERIVED STATS */
   .stat-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    margin-bottom: 8px;
-    padding: 6px 0;
+    gap: 2px;
+    margin-bottom: 5px;
+    padding: 4px 0;
     border-top: 1px solid rgba(255,255,255,0.06);
     border-bottom: 1px solid rgba(255,255,255,0.06);
   }
   .stat { text-align: center; }
   .stat-val {
     font-family: var(--font-mono);
-    font-size: 15px;
+    font-size: 12px;
     line-height: 1.1;
   }
   .stat-lbl {
-    font-size: 6px; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 5px; letter-spacing: 0.5px; text-transform: uppercase;
     color: var(--muted); margin-top: 1px;
   }
   .col-orange { color: var(--accent); }
@@ -182,97 +189,133 @@
   .col-red    { color: var(--red); }
   .col-yellow { color: var(--yellow); }
 
-  /* STINTS TABLE */
-  .stints-header {
-    display: grid;
-    /*grid-template-columns: 52px 1fr 50px 50px 50px;*/
-    /*grid-template-columns: 20px 1fr 50px 50px 50px;*/
-    grid-template-columns: 25px 40px 45px 35px 35px 22px;
-    gap: 2px;
-    padding:1px 4px;
-    font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
-    color: var(--muted); font-weight: 700;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    margin-bottom: 2px;
-  }
-  .stints-header span:not(:first-child) {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  /* STINTS TABLE — vertical card layout */
+  .stints-header { display: none; } /* no header needed for card layout */
 
   .stint-row {
-    display: grid;
-    /*grid-template-columns: 52px 1fr 50px 50px 50px;*/
-    grid-template-columns: 20px 45px 45px 35px 35px 22px;
-    gap: 2px;
-    padding: 2px 4px;
+    display: flex;
+    flex-direction: column;
+    padding: 3px 5px;
     border-radius: 3px;
-    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     transition: background .15s;
+    gap: 1px;
   }
   .stint-row:hover { background: rgba(255,255,255,0.04); }
   .stint-row.done-row { opacity: 0.38; }
 
+  /* Top line: big numbers — Pit Lap and Laps dominant */
+  .stint-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 3px;
+  }
+  /* Bottom line: secondary info */
+  .stint-bot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3px;
+  }
+
   .stint-num {
-    font-size: 9.5px; color: var(--muted); font-weight: 700; letter-spacing: .5px;
+    font-size: 8px; color: var(--muted); font-weight: 700; letter-spacing: .5px;
+    min-width: 10px;
   }
   .stint-type-sel {
     background: transparent;
     border: none;
-    color: var(--text);
+    color: var(--muted);
     font-family: var(--font-ui);
-    font-size: 8px;
+    font-size: 7px;
     font-weight: 800;
     cursor: pointer;
     outline: none;
-    width: 110%;
+    flex: 1;
     -webkit-appearance: none;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 8 8'%3E%3Cpath d='M0 2l4 4 4-4' fill='none' stroke='%237a8a9a' stroke-width='1.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 4px center;
-    padding-left: 2px;
+    background-position: right 1px center;
+    padding-right: 8px;
+    max-width: 60px;
   }
   .stint-type-sel option { background: #111; }
 
+  /* The big priority values */
   .sc {
-    text-align: center;
     font-family: var(--font-mono);
+    font-weight: 700;
     font-size: 18px;
-    font-weight: 600;
+    line-height: 1;
   }
-  .sc.finish { color: var(--green); font-size: 9px; letter-spacing: .5px; }
+  .sc.pitlap-val {
+    font-size: 20px;
+    color: var(--red);
+  }
+  .sc.laps-val {
+    font-size: 20px;
+    color: var(--accent2);
+  }
+  .sc.finish { color: var(--green); font-size: 9px; letter-spacing: .5px; font-weight: 600; }
   .sc.warn   { color: var(--yellow); }
   .sc.bad    { color: var(--red); }
 
-  /* TOTALS */
-  .totals-row {
-    display: grid;
-    /*grid-template-columns: 52px 1fr 50px 50px 50px;*/
-    grid-template-columns: 52px 1fr 45px 45px 35px 22px;
-    gap: 2px;
-    padding: 5px 4px 2px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    margin-top: 3px;
+  /* small fuel label */
+  .fuel-lbl {
+    font-size: 6px; color: var(--muted); letter-spacing: .5px; text-transform: uppercase;
+    line-height: 1;
   }
-  .totals-row .tl {
-    font-size: 9px; text-transform: uppercase; letter-spacing: .5px;
-    color: var(--muted); font-family: var(--font-ui); font-weight: 700;
-    grid-column: 1 / 3;
+  .pit-lbl {
+    font-size: 6px; color: rgba(255,68,68,0.6); letter-spacing: .5px; text-transform: uppercase;
+    line-height: 1;
   }
-  .totals-row .tv {
-    text-align: center;
+  .laps-lbl {
+    font-size: 6px; color: rgba(0,212,255,0.6); letter-spacing: .5px; text-transform: uppercase;
+    line-height: 1;
+  }
+  .sc-fuel {
     font-family: var(--font-mono);
     font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .sc-fuel.warn { color: var(--yellow); }
+  .sc-fuel.bad  { color: var(--red); }
+
+  /* big number columns with labels */
+  .val-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+
+  /* TOTALS */
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2px;
+    padding: 3px 5px 2px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 2px;
+  }
+  .totals-row .tl {
+    font-size: 7px; text-transform: uppercase; letter-spacing: .5px;
+    color: var(--muted); font-family: var(--font-ui); font-weight: 700;
+  }
+  .totals-row .tv {
+    font-family: var(--font-mono);
+    font-size: 8px;
     color: var(--accent2);
   }
 
   /* FUEL WARNING */
   #fuel-warn {
-    margin-top: 6px; padding: 4px 7px;
-    border-radius: 3px; font-size: 10px; font-weight: 700;
+    margin-top: 4px; padding: 3px 5px;
+    border-radius: 3px; font-size: 8px; font-weight: 700;
     text-align: center; letter-spacing: .5px; display: none;
   }
   #fuel-warn.bad { background: rgba(255,68,68,.18); border: 1px solid var(--red); color: var(--red); display:block; }
@@ -280,42 +323,25 @@
 
   #app {
     transform-origin: top left;
+    position: relative;
   }
 
-  #scale-bar {
+  #resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    cursor: nwse-resize;
     display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 2px;
+    opacity: 0.35;
+    transition: opacity .15s;
   }
-  #scale-bar label {
-    font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
-    color: var(--muted); font-weight: 600; white-space: nowrap;
-  }
-  #scale-slider {
-    flex: 1;
-    appearance: none;
-    height: 3px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 2px;
-    outline: none;
-    cursor: pointer;
-  }
-  #scale-slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-  }
-  #scale-val {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--accent);
-    width: 28px;
-    text-align: right;
-  }
+  #resize-handle:hover { opacity: 0.9; }
+  #resize-handle svg { display: block; }
   #inputs-toggle-row {
     display: flex;
     justify-content: flex-end;
@@ -375,42 +401,66 @@
       <div id="inputs-grid-wrap">
         <div class="inputs-grid">
           <div class="input-group">
-            <label>Total Race Laps</label>
+            <label>Race Laps</label>
             <div class="input-wrap">
-              <input type="number" id="inp-laps" min="1" max="99" style="font-size: 20px;">
+              <input type="number" id="inp-laps" min="1" max="99" style="font-size: 14px;">
               <div class="steppers">
-                <button class="step-btn" tabindex="-1" data-target="inp-laps" data-dir="1">▲</button>
-                <button class="step-btn" tabindex="-1" data-target="inp-laps" data-dir="-1">▼</button>
+                <div class="steppers-col">
+                  <button class="step-btn" tabindex="-1" data-target="inp-laps" data-dir="10">▲</button>
+                  <button class="step-btn" tabindex="-1" data-target="inp-laps" data-dir="-10">▼</button>
+                </div>
+                <div class="steppers-col">
+                  <button class="step-btn" tabindex="-1" data-target="inp-laps" data-dir="1">▲</button>
+                  <button class="step-btn" tabindex="-1" data-target="inp-laps" data-dir="-1">▼</button>
+                </div>
               </div>
             </div>
           </div>
           <div class="input-group">
-            <label>Current Lap</label>
+            <label>Cur Lap</label>
             <div class="input-wrap">
-              <input type="number" id="inp-cur" min="1" max="99" style="font-size: 20px;">
+              <input type="number" id="inp-cur" min="1" max="99" style="font-size: 14px;">
               <div class="steppers">
-                <button class="step-btn" tabindex="-1" data-target="inp-cur" data-dir="1">▲</button>
-                <button class="step-btn" tabindex="-1" data-target="inp-cur" data-dir="-1">▼</button>
+                <div class="steppers-col">
+                  <button class="step-btn" tabindex="-1" data-target="inp-cur" data-dir="10">▲</button>
+                  <button class="step-btn" tabindex="-1" data-target="inp-cur" data-dir="-10">▼</button>
+                </div>
+                <div class="steppers-col">
+                  <button class="step-btn" tabindex="-1" data-target="inp-cur" data-dir="1">▲</button>
+                  <button class="step-btn" tabindex="-1" data-target="inp-cur" data-dir="-1">▼</button>
+                </div>
               </div>
             </div>
           </div>
           <div class="input-group">
-            <label>Fuel Remaining</label>
+            <label>Fuel Left</label>
             <div class="input-wrap">
-              <input type="number" id="inp-fuel" min="0" max="100" step="1" style="font-size: 20px;">
+              <input type="number" id="inp-fuel" min="0" max="100" step="1" style="font-size: 14px;">
               <div class="steppers">
-                <button class="step-btn" tabindex="-1" data-target="inp-fuel" data-dir="1">▲</button>
-                <button class="step-btn" tabindex="-1" data-target="inp-fuel" data-dir="-1">▼</button>
+                <div class="steppers-col">
+                  <button class="step-btn" tabindex="-1" data-target="inp-fuel" data-dir="10">▲</button>
+                  <button class="step-btn" tabindex="-1" data-target="inp-fuel" data-dir="-10">▼</button>
+                </div>
+                <div class="steppers-col">
+                  <button class="step-btn" tabindex="-1" data-target="inp-fuel" data-dir="1">▲</button>
+                  <button class="step-btn" tabindex="-1" data-target="inp-fuel" data-dir="-1">▼</button>
+                </div>
               </div>
             </div>
           </div>
           <div class="input-group">
-            <label>Est. Laps in Tank</label>
+            <label>Laps/Tank</label>
             <div class="input-wrap">
-              <input type="number" id="inp-estlaps" min="0.1" max="999" step="0.1" style="font-size: 20px;">
-              <div class="steppers steppers-fine">
-                <button class="step-btn" tabindex="-1" data-target="inp-estlaps" data-dir="0.1">▲</button>
-                <button class="step-btn" tabindex="-1" data-target="inp-estlaps" data-dir="-0.1">▼</button>
+              <input type="number" id="inp-estlaps" min="0.1" max="999" step="0.1" style="font-size: 14px;">
+              <div class="steppers">
+                <div class="steppers-col">
+                  <button class="step-btn" tabindex="-1" data-target="inp-estlaps" data-dir="1">▲</button>
+                  <button class="step-btn" tabindex="-1" data-target="inp-estlaps" data-dir="-1">▼</button>
+                </div>
+                <div class="steppers-col">
+                  <button class="step-btn" tabindex="-1" data-target="inp-estlaps" data-dir="0.1">▲</button>
+                  <button class="step-btn" tabindex="-1" data-target="inp-estlaps" data-dir="-0.1">▼</button>
+                </div>
               </div>
             </div>
           </div>
@@ -422,11 +472,11 @@
     <div class="stat-row">
       <div class="stat">
         <div class="stat-val col-orange" id="s-fpl">—</div>
-        <div class="stat-lbl">Fuel / Lap</div>
+        <div class="stat-lbl">Fuel/Lap</div>
       </div>
       <div class="stat">
         <div class="stat-val col-blue" id="s-maxlaps">—</div>
-        <div class="stat-lbl">Max Laps/Tank</div>
+        <div class="stat-lbl">Laps/Tank</div>
       </div>
       <div class="stat">
         <div class="stat-val col-green" id="s-lapsrem">—</div>
@@ -434,7 +484,7 @@
       </div>
       <div class="stat">
         <div class="stat-val col-yellow" id="s-fuelneeded">—</div>
-        <div class="stat-lbl">Fuel to Finish</div>
+        <div class="stat-lbl">Total Fuel</div>
       </div>
     </div>
 
@@ -447,16 +497,16 @@
 
     <div class="totals-row">
       <span class="tl">Totals</span>
-      <span class="tv" id="t-fuel">—</span>
-      <span class="tv" id="t-left" style="text-align:left; white-space:nowrap;">—</span>
+      <span class="tv" id="t-left" style="white-space:nowrap; font-size:8px">—</span>
     </div>
 
     <div id="fuel-warn"></div>
   </div>
-  <div id="scale-bar">
-    <label>Scale</label>
-    <input type="range" id="scale-slider" min="50" max="200" value="100" step="5">
-    <span id="scale-val">1×</span>
+  <div id="resize-handle" title="Drag to resize">
+    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="1" y1="7" x2="7" y2="1" stroke="#ff9d00" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="4" y1="7" x2="7" y2="4" stroke="#ff9d00" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
   </div>
 </div>
 
@@ -659,36 +709,43 @@
       row.className = 'stint-row' + (raceComplete ? ' done-row' : '');
 
       // Pit lap cell — editable input if locked, number if not
-      let pitCell;
-      let lapsCell;
+      const fuelCls = stintFuel > TANK ? 'bad' : stintFuel > TANK * 0.92 ? 'warn' : '';
+      const lockLabel = isLocked ? '🛑' : '✎';
+      const lockCls   = isLocked ? 'locked' : '';
+
+      let pitDisplay, lapsDisplay;
       if (isLocked) {
-        pitCell = `<input class="pit-input" type="number" data-stint="${i}" data-type="pitlap" value="${state.lockedPitLaps[i]}" min="1" max="${totalLaps}">`;
-        lapsCell = `<input class="pit-input" type="number" data-stint="${i}" data-type="laps" value="${stintLaps}" min="1" max="${maxLaps}">`;
+        pitDisplay  = `<input class="pit-input" type="number" data-stint="${i}" data-type="pitlap" value="${state.lockedPitLaps[i]}" min="1" max="${totalLaps}">`;
+        lapsDisplay = `<input class="pit-input" type="number" data-stint="${i}" data-type="laps" value="${stintLaps}" min="1" max="${maxLaps}">`;
       } else if (finishes) {
-        pitCell  = `<span class="sc finish">FINISH</span>`;
-        lapsCell = `<span class="sc">${stintLaps}</span>`;
+        pitDisplay  = `<span class="sc finish">FIN</span>`;
+        lapsDisplay = `<span class="sc laps-val">${stintLaps}</span>`;
       } else {
-        const cls = stintFuel > TANK ? 'bad' : stintFuel > TANK * 0.92 ? 'warn' : '';
-        pitCell  = `<span class="sc ${cls}">${pitLap}</span>`;
-        lapsCell = `<span class="sc">${stintLaps}</span>`;
+        pitDisplay  = `<span class="sc pitlap-val ${fuelCls}">${pitLap}</span>`;
+        lapsDisplay = `<span class="sc laps-val">${stintLaps}</span>`;
       }
 
-      const fuelCls = stintFuel > TANK ? 'bad' : stintFuel > TANK * 0.92 ? 'warn' : '';
-      const lockLabel = isLocked ? '🛑' : '✎'; //🛠️
-      const lockCls   = isLocked ? 'locked' : '';
-      
-      
       row.innerHTML = `
-        <span class="stint-num" style="font-size: 20px">${i + 1}</span>
-        <select class="stint-type-sel" data-index="${i}" ${isLocked ? 'disabled' : ''}>
-          ${Object.keys(OFFSETS).map(t =>
-            `<option value="${t}" ${t === typeName ? 'selected' : ''}>${t}</option>`
-          ).join('')}
-        </select>
-        <span class="sc ${fuelCls}">${Math.round(stintFuel)}</span>
-        ${pitCell}
-        ${lapsCell}
-        <button class="lock-btn ${lockCls}" data-stint="${i}">${lockLabel}</button>
+        <div class="stint-top">
+          <div class="val-block">
+            <div class="pit-lbl">PIT LAP</div>
+            ${pitDisplay}
+          </div>
+          <div class="val-block">
+            <div class="laps-lbl">LAPS</div>
+            ${lapsDisplay}
+          </div>
+        </div>
+        <div class="stint-bot">
+          <span class="stint-num">#${i + 1}</span>
+          <select class="stint-type-sel" data-index="${i}" ${isLocked ? 'disabled' : ''}>
+            ${Object.keys(OFFSETS).map(t =>
+              `<option value="${t}" ${t === typeName ? 'selected' : ''}>${t}</option>`
+            ).join('')}
+          </select>
+          <span class="sc-fuel ${fuelCls}">${Math.round(stintFuel)}</span>
+          <button class="lock-btn ${lockCls}" data-stint="${i}">${lockLabel}</button>
+        </div>
       `;
       container.appendChild(row);
 
@@ -739,14 +796,13 @@
     }
 
     // Totals
-    sv('t-fuel',   Math.round(totalFuelUsed));
-    //sv('t-pitlap', Math.min(cumulativeLap, totalLaps));
+    //sv('t-fuel', Math.round(totalFuelUsed));
     const totalFuelNeeded = fuelPerLap * totalLaps;
     const finalLeftover = Math.round(totalFuelUsed - totalFuelNeeded);
     if (finalLeftover>0) {
-      sv('t-left', `Leftover Fuel:+${finalLeftover}`);
+      sv('t-left', `+${finalLeftover} fuel left`);
     } else {
-      sv('t-left', `Leftover Fuel:${finalLeftover}`);
+      sv('t-left', `${finalLeftover} fuel short`);
     }
     
 
@@ -793,7 +849,7 @@
       const min   = parseFloat(input.min) || 0;
       const max   = parseFloat(input.max) || Infinity;
       let val = parseFloat(input.value) || 0;
-      val = Math.round((val + dir) / step) * step; // snap to step grid
+      val = Math.round(val + dir);// / step) * step; // snap to step grid
       val = Math.min(max, Math.max(min, val));
       input.value = parseFloat(val.toFixed(3));
       input.dispatchEvent(new Event('input'));
@@ -885,15 +941,34 @@
     document.addEventListener('mouseup', () => { dragging = false; });
   })();
 
-  // Scale
-  $('scale-slider').addEventListener('input', e => {
-    const s = e.target.value / 100;
-    $('app').dataset.scale = s;
-    const posX = parseFloat($('app').dataset.posX || 0);
-    const posY = parseFloat($('app').dataset.posY || 0);
-    $('app').style.transform = `scale(${s}) translate(${posX / s}px, ${posY / s}px)`;
-    $('scale-val').textContent = s.toFixed(2).replace(/\.?0+$/, '') + '×';
-  });
+  // Corner drag-to-resize
+  (function() {
+    const handle = $('resize-handle');
+    const app = $('app');
+    const BASE_W = 140; // matches html/body width in px
+    let resizing = false;
+    let startX = 0, startScale = 1;
+
+    handle.addEventListener('mousedown', e => {
+      resizing = true;
+      startX = e.clientX;
+      startScale = parseFloat(app.dataset.scale || 1);
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!resizing) return;
+      const dx = e.clientX - startX;
+      const newScale = Math.min(4, Math.max(0.4, startScale + dx / BASE_W));
+      app.dataset.scale = newScale;
+      const posX = parseFloat(app.dataset.posX || 0);
+      const posY = parseFloat(app.dataset.posY || 0);
+      app.style.transform = `scale(${newScale}) translate(${posX / newScale}px, ${posY / newScale}px)`;
+    });
+
+    document.addEventListener('mouseup', () => { resizing = false; });
+  })();
 
   
   // Toggle inputs section
