@@ -844,6 +844,8 @@
       const min   = parseFloat(input.min) || 0;
       const max   = parseFloat(input.max) || Infinity;
       let val = parseFloat(input.value) || 0;
+      // Fuel Left only: if empty and a down arrow is clicked, count down from 100
+      if (input.id === 'inp-fuel' && input.value === '' && dir < 0) val = 100;
       val = Math.round((val + dir) * 1000) / 1000;
       val = Math.min(max, Math.max(min, val));
       input.value = parseFloat(val.toFixed(3));
